@@ -1,13 +1,11 @@
 const smtpClient = require("smtp-client").SMTPClient;
 
-console.log(smtpClient);
-
 module.exports = (domain) => {
 	const smtp = {
 		_client: undefined,
 		init: (domain) => {
 			return new Promise((resolve, reject) => {
-				smtp._client = new SMTPClient({
+				smtp._client = new smtpClient({
 					host: domain[0].exchange,
 					port: 25
 				})

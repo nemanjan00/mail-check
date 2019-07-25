@@ -1,14 +1,16 @@
 const smtp = require("../smtp");
 const validator = require("validator");
-const dns = require("dns");
+const dns = require("../dns");
 
 module.exports = (mailDomain) => {
 	const domain = {
 		_emails: {},
 		addEmail: (email) => {
-			if(email instanceof String) {
+			if(typeof email === 'string' || email instanceof String) {
 				email = {email};
 			}
+
+			email.invalid = false;
 
 			domain._emails[email.email] = email;
 		},
@@ -19,7 +21,7 @@ module.exports = (mailDomain) => {
 			email.error = message;
 		},
 		failAll: (message) => {
-			domain._emails.forEach((email) => {
+			Object.values(domain._emails).forEach((email) => {
 				domain.fail(email.email, message);
 			});
 		},
@@ -33,7 +35,7 @@ module.exports = (mailDomain) => {
 				let validEmails = undefined;
 
 				dns.getMx(mailDomain).then((mx) => {
-					Object.keys(domain._emails).forEach((email) => {
+					Object.values(domain._emails).forEach((email) => {
 						if(!validator.isEmail(email.email)) {
 							domain.fail(email.email, "Invalid email");
 						}
@@ -41,6 +43,7 @@ module.exports = (mailDomain) => {
 
 					smtp(mx).then((smtpClient) => {
 						const validEmails = domain.getValid();
+
 						const promises = validEmails.map(email => {
 							return smtpClient._verifyMail(email.email);
 						});

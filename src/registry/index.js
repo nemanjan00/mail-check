@@ -11,7 +11,7 @@ const registry = {
 		return domains[domain];
 	},
 	addDomain: (domain) => {
-		return registry.getDomain[domain];
+		return registry.getDomain(domain);
 	},
 	getDomains: () => {
 		return domains;
