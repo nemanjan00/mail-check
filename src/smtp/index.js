@@ -54,6 +54,7 @@ module.exports = (domain) => {
 						reject(error);
 					});
 				}).catch((error) => {
+					console.error(error);
 					status = "fail";
 				});
 			});
