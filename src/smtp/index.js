@@ -9,6 +9,7 @@ module.exports = (domain) => {
 		_pointer: 0,
 		_client: undefined,
 		init: (domain) => {
+			// Limit concurency of this function to 1
 			smtp.verifyMail = promiseWrapper(smtp._verifyMail, 1);
 
 			return new Promise((resolve, reject) => {
