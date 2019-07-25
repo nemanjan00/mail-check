@@ -1,0 +1,10 @@
+{
+  "name": "check-mail",
+  "version": "0.0.0",
+  "description": "Check and try to fix email address",
+  "main": "index.js",
+  "repository": "git@github.com:nemanjan00/mail-check.git",
+  "author": "nemanjan00 <nemanjan00@gmail.com>",
+  "license": "MIT",
+  "private": false
+}
