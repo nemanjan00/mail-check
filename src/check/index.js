@@ -1,4 +1,5 @@
 const registry = require("../registry");
+const _ = require("lodash");
 
 module.exports = {
 	massCheck: (mails) => {
@@ -16,9 +17,14 @@ module.exports = {
 			const checks = Object.values(domains).map(domain => domain.checkDomain());
 
 			Promise.all(checks).then(() => {
+				const result = {};
 				Object.values(domains).forEach(domain => {
-					console.log(domain.serialize());
+					_.extend(result, domain.serialize());
 				});
+
+				console.log(result);
+
+				resolve(result);
 			});
 		});
 	}

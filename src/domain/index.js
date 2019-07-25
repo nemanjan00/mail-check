@@ -49,7 +49,9 @@ module.exports = (mailDomain) => {
 						});
 						
 						Promise.all(promises).then(() => {
-							resolve();
+							smtpClient.end().then(() => {
+								resolve();
+							});
 						});
 					}).catch((error) => {
 						console.error(error.toString());

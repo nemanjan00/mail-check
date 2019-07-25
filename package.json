@@ -9,6 +9,7 @@
   "private": false,
   "dependencies": {
     "dnscache": "^1.0.2",
+    "lodash": "^4.17.15",
     "mailcheck": "^1.1.1",
     "smtp-client": "^0.3.1",
     "validator": "^11.1.0"
