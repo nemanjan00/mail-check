@@ -11,20 +11,34 @@ module.exports = (domain) => {
 				})
 				
 				smtp._client.connect().then(() => {
-					resolve(smtp);
+					smtp._client.greet({hostname: domain[0].exchange}).then(() => {
+						smtp._client.mail({from: 'from@sender.com'}).then(() => {
+							resolve(smtp);
+						}).catch((error) => {
+							reject(error);
+						});
+					}).catch((error) => {
+						reject(error);
+					});
 				}).catch((error) => {
 					reject(error);
 				});
 			});
 		},
-		_verifyMail: (mail) => {
-			return new Promise((resolve) => {
-				resolve(true);
+		verifyMail: (mail) => {
+			return new Promise((resolve, reject) => {
+				smtp._client.rcpt({to: mail}).then((data) => {
+					resolve(data);
+				}).catch(reject);
 			});
 		},
-		checkAcceptAll: () => {
+		checkAcceptAll: (domain) => {
 			return new Promise((resolve) => {
-				resolve(false);
+				smtp._client.rcpt({to: "sdfsfsfdsd@" + domain}).then(() => {
+					resolve(true);
+				}).catch(() => {
+					resolve(false);
+				});
 			});
 		},
 		end: () => {

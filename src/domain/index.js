@@ -2,6 +2,22 @@ const smtp = require("../smtp");
 const validator = require("validator");
 const dns = require("../dns");
 
+const promiseMap = (promise) => {
+	return new Promise((resolve, reject) => {
+		promise.then(data => {
+			resolve({
+				status: "resolved",
+				data
+			});
+		}).catch((data) => {
+			resolve({
+				status: "rejected",
+				data
+			});
+		});
+	});
+}
+
 module.exports = (mailDomain) => {
 	const domain = {
 		_emails: {},
@@ -26,7 +42,7 @@ module.exports = (mailDomain) => {
 			});
 		},
 		getValid: () => {
-			return Object.keys(domain._emails).filter((email) => {
+			return Object.values(domain._emails).filter((email) => {
 				return !email.invalid;
 			});
 		},
@@ -44,14 +60,28 @@ module.exports = (mailDomain) => {
 					smtp(mx).then((smtpClient) => {
 						const validEmails = domain.getValid();
 
-						const promises = validEmails.map(email => {
-							return smtpClient._verifyMail(email.email);
-						});
-						
-						Promise.all(promises).then(() => {
-							smtpClient.end().then(() => {
-								resolve();
-							});
+						smtpClient.checkAcceptAll(mailDomain).then((accepts) => {
+							if(!accepts) {
+								const promises = validEmails.map(email => {
+									return smtpClient.verifyMail(email.email);
+								});
+								
+								Promise.all(promises).then((checks) => {
+									checks.forEach((value, key) => {
+										if(value.status == "rejected") {
+											domain.fail(validEmails[key].email, "Email does not exist");
+										}
+									});
+
+									smtpClient.end().then(() => {
+										resolve();
+									});
+								});
+
+								return;
+							}
+
+							domain.failAll("Server accepting all mails");
 						});
 					}).catch((error) => {
 						console.error(error.toString());
