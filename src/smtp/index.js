@@ -15,6 +15,7 @@ module.exports = (domain) => {
 			return new Promise((resolve, reject) => {
 				if(smtp._pointer == domain.length) {
 					reject();
+					return;
 				}
 
 				smtp._client = new smtpClient({
@@ -47,12 +48,8 @@ module.exports = (domain) => {
 					smtp._client.greet({hostname: domain[0].exchange}).then(() => {
 						smtp._client.mail({from: 'from@sender.com'}).then(() => {
 							resolve(smtp);
-						}).catch((error) => {
-							reject(error);
-						});
-					}).catch((error) => {
-						reject(error);
-					});
+						}).catch(reject);
+					}).catch(reject);
 				}).catch((error) => {
 					console.error(error);
 					status = "fail";

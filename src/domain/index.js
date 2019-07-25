@@ -88,7 +88,9 @@ module.exports = (mailDomain) => {
 							resolve();
 						});
 					}).catch((error) => {
-						console.error(error.toString());
+						if(error) {
+							console.error(error.toString());
+						}
 
 						domain.failAll("Unable to connect to SMTP server");
 
