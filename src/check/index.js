@@ -22,8 +22,6 @@ module.exports = {
 					_.extend(result, domain.serialize());
 				});
 
-				console.log(result);
-
 				resolve(result);
 			});
 		});
