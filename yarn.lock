@@ -15,6 +15,11 @@ dnscache@^1.0.2:
     asap "^2.0.6"
     lodash.clone "^4.5.0"
 
+line-buffer@0.1.x:
+  version "0.1.4"
+  resolved "https://registry.npmjs.org/line-buffer/-/line-buffer-0.1.4.tgz#e07de183310b60122fde4b335cf6606543ffb1d3"
+  integrity sha1-4H3hgzELYBIv3kszXPZgZUP/sdM=
+
 lodash.clone@^4.5.0:
   version "4.5.0"
   resolved "https://registry.npmjs.org/lodash.clone/-/lodash.clone-4.5.0.tgz#195870450f5a13192478df4bc3d23d2dea1907b6"
@@ -24,3 +29,24 @@ mailcheck@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/mailcheck/-/mailcheck-1.1.1.tgz#d87cf6ba0b64ba512199dbf93f1489f479591e34"
   integrity sha1-2Hz2ugtkulEhmdv5PxSJ9HlZHjQ=
+
+promised-timeout@0.2.x:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/promised-timeout/-/promised-timeout-0.2.0.tgz#45eafcf5ed9457e2e60efa77c2c860d6ef1d816e"
+  integrity sha1-Rer89e2UV+LmDvp3wshg1u8dgW4=
+
+smtp-channel@0.2.2:
+  version "0.2.2"
+  resolved "https://registry.npmjs.org/smtp-channel/-/smtp-channel-0.2.2.tgz#5beb1b62398c5173fd7c8589f0fe0b017e5b7eec"
+  integrity sha1-W+sbYjmMUXP9fIWJ8P4LAX5bfuw=
+  dependencies:
+    line-buffer "0.1.x"
+    promised-timeout "0.2.x"
+
+smtp-client@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.npmjs.org/smtp-client/-/smtp-client-0.3.1.tgz#3db476f5b1f86b373b79b9cf7ae3b305dc9f1fa4"
+  integrity sha1-PbR29bH4azc7ebnPeuOzBdyfH6Q=
+  dependencies:
+    promised-timeout "0.2.x"
+    smtp-channel "0.2.2"
