@@ -40,6 +40,13 @@ promised-timeout@0.2.x:
   resolved "https://registry.npmjs.org/promised-timeout/-/promised-timeout-0.2.0.tgz#45eafcf5ed9457e2e60efa77c2c860d6ef1d816e"
   integrity sha1-Rer89e2UV+LmDvp3wshg1u8dgW4=
 
+queue-promised@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.npmjs.org/queue-promised/-/queue-promised-0.0.10.tgz#bc84c5ff0131b355775e7b5727f805672d2a41aa"
+  integrity sha512-1QeeXKiq+foD3tRG9ZlrM1Ww5LftgkEzRiqasU7XNg/lFVe2Ci0Ku0lODc6JFmxNbkOD+xHVvdvYyh+LQODfgA==
+  dependencies:
+    uuid "^3.3.2"
+
 smtp-channel@0.2.2:
   version "0.2.2"
   resolved "https://registry.npmjs.org/smtp-channel/-/smtp-channel-0.2.2.tgz#5beb1b62398c5173fd7c8589f0fe0b017e5b7eec"
@@ -55,6 +62,11 @@ smtp-client@^0.3.1:
   dependencies:
     promised-timeout "0.2.x"
     smtp-channel "0.2.2"
+
+uuid@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.npmjs.org/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
+  integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
 
 validator@^11.1.0:
   version "11.1.0"

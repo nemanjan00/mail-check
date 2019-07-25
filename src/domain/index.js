@@ -48,15 +48,17 @@ module.exports = (mailDomain) => {
 		},
 		checkDomain: () => {
 			return new Promise((resolve) => {
-				let validEmails = undefined;
+				Object.values(domain._emails).forEach((email) => {
+					if(!validator.isEmail(email.email)) {
+						domain.fail(email.email, "Invalid email");
+					}
+				});
+
+				if(domain.getValid().length == 0) {
+					resolve();
+				}
 
 				dns.getMx(mailDomain).then((mx) => {
-					Object.values(domain._emails).forEach((email) => {
-						if(!validator.isEmail(email.email)) {
-							domain.fail(email.email, "Invalid email");
-						}
-					});
-
 					smtp(mx).then((smtpClient) => {
 						const validEmails = domain.getValid();
 
@@ -66,7 +68,7 @@ module.exports = (mailDomain) => {
 									return smtpClient.verifyMail(email.email);
 								});
 								
-								Promise.all(promises).then((checks) => {
+								Promise.all(promises.map(promiseMap)).then((checks) => {
 									checks.forEach((value, key) => {
 										if(value.status == "rejected") {
 											domain.fail(validEmails[key].email, "Email does not exist");
@@ -82,6 +84,8 @@ module.exports = (mailDomain) => {
 							}
 
 							domain.failAll("Server accepting all mails");
+
+							resolve();
 						});
 					}).catch((error) => {
 						console.error(error.toString());
