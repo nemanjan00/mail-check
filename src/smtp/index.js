@@ -8,16 +8,31 @@ module.exports = (domain) => {
 		init: (domain) => {
 			return new Promise((resolve, reject) => {
 				smtp._client = new SMTPClient({
-					host: domain,
+					host: domain[0].exchange,
 					port: 25
 				})
+				
+				smtp._client.connect().then(() => {
+					resolve(smtp);
+				}).catch((error) => {
+					reject(error);
+				});
 			});
 		},
-		verifyMail: (mail) => {
+		_verifyMail: (mail) => {
+			return new Promise((resolve) => {
+				resolve(true);
+			});
 		},
 		checkAcceptAll: () => {
+			return new Promise((resolve) => {
+				resolve(false);
+			});
 		},
 		end: () => {
+			return new Promise((resolve, reject) => {
+				smtp._client.quit().then(resolve).catch(reject);
+			});
 		}
 	};
 
