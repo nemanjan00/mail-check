@@ -6,7 +6,8 @@ check.massCheck([
 	"nemanja@flocksocial.io",
 	"fsdfsdfsdfkfjdkf@gmail.com",
 	"nemanjan00@yahoo.com",
-	"me@nemanja.top"
+	"me@nemanja.top",
+	"nemanjan00@teknik.io"
 ]).then((results) => {
 	console.log(results);
 });
