@@ -1,9 +1,12 @@
-const registry = require("../registry");
+const registryFactory = require("../registry");
 const _ = require("lodash");
+const suggestion = require("../suggestion");
 
-module.exports = {
+const check = {
 	massCheck: (mails) => {
 		return new Promise((resolve, reject) => {
+			const registry = registryFactory();
+
 			mails.forEach((mail) => {
 				const domain = mail.split("@")[1];
 
@@ -18,13 +21,37 @@ module.exports = {
 
 			Promise.all(checks).then(() => {
 				const result = {};
+
 				Object.values(domains).forEach(domain => {
 					_.extend(result, domain.serialize());
 				});
 
-				resolve(result);
+				const suggestions = Object.values(result).filter((email) => {
+					return email.invalid;
+				}).map((email) => {
+					email = _.cloneDeep(email);
+
+					email.email = (suggestion.suggest(email.email) || {full: email.email}).full;
+
+					return email;
+				}).filter((email) => {
+					return result[email.email] == undefined;
+				});
+
+				if(suggestions.length == 0) {
+					resolve(result);
+					return;
+				}
+
+				check.massCheck(suggestions).then((checks) => {
+					_.extend(result, checks);
+
+					resolve(result);
+				});
 			});
 		});
 	}
 };
+
+module.exports = check;
 
