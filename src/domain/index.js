@@ -26,6 +26,8 @@ module.exports = (mailDomain) => {
 				email = {email};
 			}
 
+			email.email = email.email.toLowerCase();
+
 			email.invalid = false;
 
 			domain._emails[email.email] = email;
@@ -48,6 +50,9 @@ module.exports = (mailDomain) => {
 		},
 		checkDomain: () => {
 			return new Promise((resolve) => {
+				console.log("-------------------------------");
+				console.log("Checking: " + mailDomain);
+
 				Object.values(domain._emails).forEach((email) => {
 					if(!validator.isEmail(email.email)) {
 						domain.fail(email.email, "Invalid email");
@@ -89,7 +94,7 @@ module.exports = (mailDomain) => {
 						});
 					}).catch((error) => {
 						if(error) {
-							console.error(error.toString());
+							console.error((error || {message: null} ).message);
 						}
 
 						domain.failAll("Unable to connect to SMTP server");
@@ -97,7 +102,7 @@ module.exports = (mailDomain) => {
 						resolve();
 					});
 				}).catch((error) => {
-					console.error(error);
+						console.error((error || {message: null} ).message);
 
 					domain.failAll("Invalid MX");
 

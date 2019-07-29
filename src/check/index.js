@@ -2,6 +2,9 @@ const registryFactory = require("../registry");
 const _ = require("lodash");
 const suggestion = require("../suggestion");
 
+const queuePromise = require("queue-promised");
+const promiseWrapper = queuePromise.wrapper;
+
 const check = {
 	massCheck: (mails) => {
 		return new Promise((resolve, reject) => {
@@ -17,7 +20,7 @@ const check = {
 
 			const domains = registry.getDomains();
 
-			const checks = Object.values(domains).map(domain => domain.checkDomain());
+			const checks = Object.values(domains).map(promiseWrapper(domain => domain.checkDomain(), 1));
 
 			Promise.all(checks).then(() => {
 				const result = {};
