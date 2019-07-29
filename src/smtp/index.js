@@ -103,7 +103,12 @@ module.exports = (domain, mailDomain) => {
 		},
 		_closed: (data) => {
 			smtp._disconnected = true;
-			logger.error(mailDomain + ":smtpDisconnect " + data);
+			
+			if(data) {
+				logger.error(mailDomain + ":smtpDisconnect " + data);
+			} else {
+				logger.error(mailDomain + ":smtpDisconnect");
+			}
 		},
 		checkAcceptAll: (domain) => {
 			if(smtp._disconnected) {
@@ -124,7 +129,7 @@ module.exports = (domain, mailDomain) => {
 					resolve();
 				}
 
-				smtp._client.removeListener("end", smtp._closed);
+				smtp._client.removeListener("close", smtp._closed);
 				smtp._client.quit().then(resolve).catch(reject);
 			});
 		}
