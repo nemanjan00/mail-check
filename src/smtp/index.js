@@ -3,8 +3,9 @@ const smtpClient = require("smtp-client").SMTPClient;
 const queuePromise = require("queue-promised");
 const promiseWrapper = queuePromise.wrapper;
 
+const logger = require("node-color-log");
 
-module.exports = (domain) => {
+module.exports = (domain, mailDomain) => {
 	const smtp = {
 		_pointer: 0,
 		_client: undefined,
@@ -22,6 +23,8 @@ module.exports = (domain) => {
 					host: domain[smtp._pointer].exchange,
 					port: 25
 				})
+
+				smtp._client.on("end", smtp._closed);
 
 				let status = "connecting";
 
@@ -41,29 +44,71 @@ module.exports = (domain) => {
 						return;
 					}
 
-					clearTimeout(timeout);
+					smtp._disconnected = false;
 
-					status = "connected";
-
-					smtp._client.greet({hostname: domain[0].exchange}).then(() => {
-						smtp._client.mail({from: 'from@sender.com'}).then(() => {
-							resolve(smtp);
-						}).catch(reject);
-					}).catch(reject);
+					smtp._greet().then(() => {
+						clearTimeout(timeout);
+						status = "connected";
+						resolve(smtp);
+					}).catch(() => {
+						status = "fail";
+					});
 				}).catch((error) => {
-					console.error(error);
+					logger.error(mailDomain + ":" + (error || {message: null} ).message);
 					status = "fail";
 				});
 			});
 		},
+		_greet: () => {
+			return new Promise((resolve, reject) => {
+				if(smtp._disconnected) {
+					reject();
+				}
+
+				smtp._client.greet({hostname: domain[0].exchange}).then(() => {
+					if(smtp._disconnected) {
+						reject();
+					}
+
+					smtp._client.mail({from: 'from@sender.com'}).then(() => {
+						resolve();
+					}).catch(reject);
+				}).catch(reject);
+			});
+		},
+		_disconnected: true,
+		_reconnect: () => {
+			return new Promise((resolve, reject) => {
+				smtp.init(domain).then(resolve).catch(reject);
+			});
+		},
+		_retry: (callback, ...args) => {
+			return new Promise((resolve, reject) => {
+				smtp._reconnect().then(() => {
+					callback(...args).then(resolve).catch(reject);
+				}).catch(reject);
+			});
+		},
 		_verifyMail: (mail) => {
+			if(smtp._disconnected) {
+				return smtp._retry(smtp.verifyMail, mail);
+			}
+
 			return new Promise((resolve, reject) => {
 				smtp._client.rcpt({to: mail}).then((data) => {
 					resolve(data);
 				}).catch(reject);
 			});
 		},
+		_closed: () => {
+			smtp._disconnected = true;
+			logger.info(mailDomain + ":smtpDisconnect");
+		},
 		checkAcceptAll: (domain) => {
+			if(smtp._disconnected) {
+				return smtp._retry(smtp.verifyMail, mail);
+			}
+
 			return new Promise((resolve) => {
 				smtp._client.rcpt({to: "sdfsfsfdsd@" + domain}).then(() => {
 					resolve(true);
@@ -74,7 +119,12 @@ module.exports = (domain) => {
 		},
 		end: () => {
 			return new Promise((resolve, reject) => {
-				smtp._client.quit().then(resolve).catch(reject);
+				if(smtp._disconnected) {
+					resolve();
+				}
+
+				smtp._client.removeListener("end", smtp._closed);
+				smtp._client.quit().then(() => resolve()).catch((e) => reject(e));
 			});
 		}
 	};

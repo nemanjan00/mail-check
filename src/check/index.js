@@ -6,6 +6,8 @@ const queuePromise = require("queue-promised");
 const promiseWrapper = queuePromise.wrapper;
 
 const check = {
+	total: 0,
+	left: 0,
 	massCheck: (mails) => {
 		return new Promise((resolve, reject) => {
 			const registry = registryFactory();
@@ -15,12 +17,19 @@ const check = {
 
 				const domainChecker = registry.addDomain(domain);
 
+				if(!mail) {
+					return;
+				}
+
 				domainChecker.addEmail(mail);
 			});
 
 			const domains = registry.getDomains();
 
-			const checks = Object.values(domains).map(promiseWrapper(domain => domain.checkDomain(), 1));
+			check.total += Object.values(domains).length;
+			check.left += Object.values(domains).length;
+
+			const checks = Object.values(domains).map(promiseWrapper(domain => domain.checkDomain().then((data) => {--check.left; return data;}), 20));
 
 			Promise.all(checks).then(() => {
 				const result = {};

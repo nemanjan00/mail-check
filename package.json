@@ -11,8 +11,10 @@
     "dnscache": "^1.0.2",
     "lodash": "^4.17.15",
     "mailcheck": "^1.1.1",
+    "node-color-log": "^2.2.0",
     "queue-promised": "^0.0.10",
     "smtp-client": "^0.3.1",
+    "terminal-kit": "^1.28.42",
     "validator": "^11.1.0"
   }
 }

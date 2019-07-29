@@ -5,6 +5,10 @@ module.exports = () => {
 
 	const registry = {
 		getDomain: (domain) => {
+			if(!domain) {
+				return
+			}
+
 			domain = domain.toLowerCase();
 
 			if(domains[domain] === undefined){
@@ -14,7 +18,12 @@ module.exports = () => {
 			return domains[domain];
 		},
 		addDomain: (domain) => {
+			if(!domain) {
+				return
+			}
+
 			domain = domain.toLowerCase();
+
 
 			return registry.getDomain(domain);
 		},
@@ -22,7 +31,12 @@ module.exports = () => {
 			return domains;
 		},
 		clearDomain: (domain) => {
+			if(!domain) {
+				return
+			}
+
 			domain = domain.toLowerCase();
+
 
 			delete domains[domain];
 		}

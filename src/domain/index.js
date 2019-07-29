@@ -1,6 +1,7 @@
 const smtp = require("../smtp");
 const validator = require("validator");
 const dns = require("../dns");
+const logger = require("node-color-log");
 
 const promiseMap = (promise) => {
 	return new Promise((resolve, reject) => {
@@ -50,8 +51,7 @@ module.exports = (mailDomain) => {
 		},
 		checkDomain: () => {
 			return new Promise((resolve) => {
-				console.log("-------------------------------");
-				console.log("Checking: " + mailDomain);
+				logger.info(mailDomain + ":starting");
 
 				Object.values(domain._emails).forEach((email) => {
 					if(!validator.isEmail(email.email)) {
@@ -64,7 +64,7 @@ module.exports = (mailDomain) => {
 				}
 
 				dns.getMx(mailDomain).then((mx) => {
-					smtp(mx).then((smtpClient) => {
+					smtp(mx, mailDomain).then((smtpClient) => {
 						const validEmails = domain.getValid();
 
 						smtpClient.checkAcceptAll(mailDomain).then((accepts) => {
@@ -94,7 +94,7 @@ module.exports = (mailDomain) => {
 						});
 					}).catch((error) => {
 						if(error) {
-							console.error((error || {message: null} ).message);
+							logger.error(mailDomain + ":" + (error || {message: null} ).message);
 						}
 
 						domain.failAll("Unable to connect to SMTP server");
@@ -102,7 +102,7 @@ module.exports = (mailDomain) => {
 						resolve();
 					});
 				}).catch((error) => {
-						console.error((error || {message: null} ).message);
+					logger.error((new Date() * 1) + ":" + mailDomain + ":" + (error || {message: null} ).message);
 
 					domain.failAll("Invalid MX");
 
