@@ -30,13 +30,22 @@ const check = {
 			check.left += Object.values(domains).length;
 
 			const checks = Object.values(domains).map(promiseWrapper(domain => {
+				let done = false;
 				return Promise.race([domain.checkDomain().then((data) => {
-					--check.left; return data;
+					if(!done) {
+						--check.left;
+					}
+
+					return data;
 				}), new Promise(resolve => {
 					setTimeout(() => {
-						domain.getValid().forEach(mail => {
-							domain.fail(mail.email, "Timeout");
-						});
+						if(!done) {
+							--check.left;
+
+							domain.getValid().forEach(mail => {
+								domain.fail(mail.email, "Timeout");
+							});
+						}
 
 						resolve(domain._emails);
 					}, 60000);
