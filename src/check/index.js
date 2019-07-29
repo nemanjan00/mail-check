@@ -36,6 +36,8 @@ const check = {
 						--check.left;
 					}
 
+					done = true;
+
 					return data;
 				}), new Promise(resolve => {
 					setTimeout(() => {
@@ -47,10 +49,12 @@ const check = {
 							});
 						}
 
+						done = true;
+
 						resolve(domain._emails);
-					}, 60000);
+					}, 10 * 60000);
 				})
-			])}, 50));
+			])}, 5));
 
 			Promise.all(checks).then(() => {
 				const result = {};

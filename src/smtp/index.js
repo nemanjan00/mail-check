@@ -24,7 +24,6 @@ module.exports = (domain, mailDomain) => {
 					port: 25
 				})
 
-				smtp._client.on("end", smtp._closed);
 				smtp._client.on("error", smtp._closed);
 				smtp._client.on("close", smtp._closed);
 
@@ -72,7 +71,7 @@ module.exports = (domain, mailDomain) => {
 						reject();
 					}
 
-					smtp._client.mail({from: 'from@sender.com'}).then(() => {
+					smtp._client.mail({from: 'noreply@gmail.com'}).then(() => {
 						resolve();
 					}).catch(reject);
 				}).catch(reject);
@@ -102,9 +101,9 @@ module.exports = (domain, mailDomain) => {
 				}).catch(reject);
 			});
 		},
-		_closed: () => {
+		_closed: (data) => {
 			smtp._disconnected = true;
-			logger.error(mailDomain + ":smtpDisconnect");
+			logger.error(mailDomain + ":smtpDisconnect " + data);
 		},
 		checkAcceptAll: (domain) => {
 			if(smtp._disconnected) {
