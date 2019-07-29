@@ -17,7 +17,7 @@ const check = {
 
 				const domainChecker = registry.addDomain(domain);
 
-				if(!mail) {
+				if(!domainChecker) {
 					return;
 				}
 
@@ -50,7 +50,7 @@ const check = {
 						resolve(domain._emails);
 					}, 60000);
 				})
-			])}, 20));
+			])}, 50));
 
 			Promise.all(checks).then(() => {
 				const result = {};
