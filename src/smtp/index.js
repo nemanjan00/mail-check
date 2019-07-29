@@ -25,6 +25,8 @@ module.exports = (domain, mailDomain) => {
 				})
 
 				smtp._client.on("end", smtp._closed);
+				smtp._client.on("error", smtp._closed);
+				smtp._client.on("close", smtp._closed);
 
 				let status = "connecting";
 
@@ -102,7 +104,7 @@ module.exports = (domain, mailDomain) => {
 		},
 		_closed: () => {
 			smtp._disconnected = true;
-			logger.info(mailDomain + ":smtpDisconnect");
+			logger.error(mailDomain + ":smtpDisconnect");
 		},
 		checkAcceptAll: (domain) => {
 			if(smtp._disconnected) {
@@ -124,7 +126,7 @@ module.exports = (domain, mailDomain) => {
 				}
 
 				smtp._client.removeListener("end", smtp._closed);
-				smtp._client.quit().then(() => resolve()).catch((e) => reject(e));
+				smtp._client.quit().then(resolve).catch(reject);
 			});
 		}
 	};

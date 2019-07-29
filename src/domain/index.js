@@ -82,7 +82,7 @@ module.exports = (mailDomain) => {
 
 									smtpClient.end().then(() => {
 										resolve();
-									});
+									}).catch(resolve);
 								});
 
 								return;

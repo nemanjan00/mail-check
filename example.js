@@ -1,5 +1,17 @@
 const check = require("./src/check");
 
+const term = require( 'terminal-kit' ).terminal;
+
+const progressBar = term.progressBar({
+	title: 'Domain checks:',
+	percent: true,
+	inline: false
+});
+
+setInterval(() => {
+	progressBar.update(1 - (check.left / check.total));
+}, 0);
+
 check.massCheck([
 	"nemanjan00@gmail.com",
 	"ne@fsdfsdfsd.fd",

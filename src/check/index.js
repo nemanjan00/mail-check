@@ -29,7 +29,19 @@ const check = {
 			check.total += Object.values(domains).length;
 			check.left += Object.values(domains).length;
 
-			const checks = Object.values(domains).map(promiseWrapper(domain => domain.checkDomain().then((data) => {--check.left; return data;}), 20));
+			const checks = Object.values(domains).map(promiseWrapper(domain => {
+				return Promise.race([domain.checkDomain().then((data) => {
+					--check.left; return data;
+				}), new Promise(resolve => {
+					setTimeout(() => {
+						domain.getValid().forEach(mail => {
+							domain.fail(mail.email, "Timeout");
+						});
+
+						resolve(domain._emails);
+					}, 60000);
+				})
+			])}, 20));
 
 			Promise.all(checks).then(() => {
 				const result = {};

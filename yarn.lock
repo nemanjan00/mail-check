@@ -139,21 +139,19 @@ seventh@^0.7.24:
   dependencies:
     setimmediate "^1.0.5"
 
-smtp-channel@0.2.2:
+"smtp-channel@https://github.com/nemanjan00/smtp-channel.git#3ea0bfa":
   version "0.2.2"
-  resolved "https://registry.npmjs.org/smtp-channel/-/smtp-channel-0.2.2.tgz#5beb1b62398c5173fd7c8589f0fe0b017e5b7eec"
-  integrity sha1-W+sbYjmMUXP9fIWJ8P4LAX5bfuw=
+  resolved "https://github.com/nemanjan00/smtp-channel.git#3ea0bfa5a41828986ffeb75bb9e0943c89483ff9"
   dependencies:
     line-buffer "0.1.x"
     promised-timeout "0.2.x"
 
-smtp-client@^0.3.1:
+"smtp-client@https://github.com/nemanjan00/smtp-client.git#c94a780":
   version "0.3.1"
-  resolved "https://registry.npmjs.org/smtp-client/-/smtp-client-0.3.1.tgz#3db476f5b1f86b373b79b9cf7ae3b305dc9f1fa4"
-  integrity sha1-PbR29bH4azc7ebnPeuOzBdyfH6Q=
+  resolved "https://github.com/nemanjan00/smtp-client.git#c94a7803cd57f43533dfd89913a3e3bfd54b077c"
   dependencies:
     promised-timeout "0.2.x"
-    smtp-channel "0.2.2"
+    smtp-channel "https://github.com/nemanjan00/smtp-channel.git#3ea0bfa"
 
 string-kit@^0.9.9:
   version "0.9.9"
