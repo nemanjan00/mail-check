@@ -9,7 +9,7 @@
   "private": false,
   "dependencies": {
     "dnscache": "^1.0.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mailcheck": "^1.1.1",
     "node-color-log": "^2.2.0",
     "queue-promised": "^0.0.10",
