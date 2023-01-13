@@ -14,7 +14,7 @@
     "node-color-log": "^2.2.0",
     "queue-promised": "^0.0.10",
     "smtp-client": "https://github.com/nemanjan00/smtp-client.git#c94a780",
-    "terminal-kit": "^1.28.42",
+    "terminal-kit": "^2.1.8",
     "validator": "^11.1.0"
   }
 }
